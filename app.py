@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 st.title("My first Streamlit App")
-st.write("Hello Munim")
+st.write("Hello piyush")
 st.text("Lets start")
 name = st.text_input("Enter Name: ")
 if st.button("Greet"):
