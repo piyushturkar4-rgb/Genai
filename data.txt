@@ -1,7 +1,7 @@
 ﻿Project Identity
 
 Title: IoT-Based Smart Soil Recommendation System Using a 7-in-1 NPK Sensor
-Team: Divya Gomase, Mansi Jalandhar, Rounak Ramteke, Munim Bhowate, Pankaj Saharkar, Saundarya Dhoke
+Team: Divya Gomase, Mansi Jalandhar, Rounak Ramteke, piyush turkar, Pankaj Saharkar, Saundarya Dhoke
 Guide: Prof. S. L. Tiwari (Guide), Prof. J. G. Dhakate (Co-Guide)
 Institution: Dept. of Electrical Engineering, YCCE, Nagpur
 
