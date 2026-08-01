@@ -1,0 +1,73 @@
+﻿Project Identity
+
+Title: IoT-Based Smart Soil Recommendation System Using a 7-in-1 NPK Sensor
+Team: Divya Gomase, Mansi Jalandhar, Rounak Ramteke, Munim Bhowate, Pankaj Saharkar, Saundarya Dhoke
+Guide: Prof. S. L. Tiwari (Guide), Prof. J. G. Dhakate (Co-Guide)
+Institution: Dept. of Electrical Engineering, YCCE, Nagpur
+
+Core Problem Statement
+
+Smallholder Indian farmers lack affordable, real-time soil testing — lab testing needs sample transport + multi-day turnaround. Over 60% of India's population depends on agriculture with avg. holdings below 1.5 hectares.
+
+System Architecture (for bot's technical knowledge)
+
+1. Sensing layer — 7-in-1 NPK Soil Sensor
+
+Measures: Nitrogen, Phosphorus, Potassium, Moisture, Temperature, pH, EC — from one probe
+Tech: electromagnetic induction, ion-selective electrode, frequency-domain reflectometry
+Housing: food-grade stainless steel, IP68-rated
+Interface: RS485/Modbus RTU, 2-wire bus, up to 1200m cable run, each parameter = 16-bit Modbus register
+Power: 9–24V DC, factory-calibrated (no field recalibration needed)
+Cost/wiring reduction vs multi-sensor setups: ~60–70%
+
+2. Processing layer — ESP32
+
+Dual-core Xtensa LX6, up to 240MHz, Wi-Fi 802.11b/g/n + BT 4.2
+Reads sensor via UART2, Modbus RTU @ 9600 baud, CRC validation per frame
+Scaling logic (e.g., raw temp ÷10 for decimal precision)
+Acquisition cycle: every 2 seconds
+Needs RS485-to-TTL bridge (MAX485/SP3485) since sensor is RS485 differential vs ESP32's 3.3V TTL; RE/DE pin on GPIO for half-duplex timing; supports up to 256kbps
+
+3. Display & connectivity
+
+16×2 LCD via I2C (PCF8574 backpack) — local on-site readout, no internet/smartphone needed
+Cloud upload via ESP32 Wi-Fi to ThingSpeak / Firebase / AWS IoT
+
+4. Power supply
+
+12V DC input → LM7805 (5V rail: LCD + RS485) + AMS1117-3.3 LDO (3.3V rail: ESP32)
+Protections: decoupling caps, reverse-polarity Schottky diode, 1A polyfuse
+Consumption: 350–500mA @ 12V → runs several hours on a 6000mAh LiPo
+Sensor Parameter Table (Table I)
+ParameterSymbolRange/Unit
+NitrogenN0–1999 mg/kg
+PhosphorusP0–1999 mg/kg
+PotassiumK0–1999 mg/kg
+Moistureθ0–100%
+TemperatureT−40 to +80°C
+pHpH0–14
+ECEC0–20000 µS/cm
+Field Results (Table II) — good for bot demo/Q&A responses
+ParameterField 1Field 2Field 3
+pH5.67.46.2
+Moisture (%)68.033.020.0
+Temp (°C)23.331.026.0
+N (mg/kg)555337
+P (mg/kg)167169
+K (mg/kg)174145105
+RecommendationLimeSSPDAP+Urea
+Recommendation Engine Logic
+
+Threshold-based: compares each measured value to crop-specific optimal ranges → flags deficiency/excess → outputs fertilizer/amendment/irrigation guidance. Example logic embedded in results:
+
+pH < 6.0 (acidic) → recommend lime (CaCO₃)
+Low N → recommend urea
+Adequate P/K → no action
+Moisture in range → no irrigation flag
+Different soil/crop combos → DAP+Urea (cereal/groundnut), SSP (rice/sunflower)
+Future Scope (useful if bot should discuss roadmap)
+ML models (Random Forest / neural nets) replacing fixed thresholds
+Mobile app with Hindi/Marathi alerts
+Solar + LiPo for off-grid operation
+LoRa/Zigbee mesh for multi-node farm-wide mapping
+Closed-loop automation with drip irrigation/fertigation actuators
